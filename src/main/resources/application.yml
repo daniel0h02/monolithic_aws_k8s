@@ -1,0 +1,133 @@
+
+
+#localhost용
+
+# server:
+#   port: 8888
+  
+# spring:
+
+#   # mariadb settings
+#   datasource:
+#     driver-class-name: org.mariadb.jdbc.Driver
+#     url: jdbc:mariadb://localhost:3306/monolithic  
+#     username: root
+#     password: myky0226@
+  
+#   jpa:
+#     hibernate: 
+#       # create, create-drop, update, none
+#       ddl-auto: create
+#       # 콘솔출력
+#     show-sql: true     
+#     properties:
+#       hibernate:
+#         # h2
+#         # dialect: org.hibernate.dialect.H2Dialect
+#         # mariadb
+#         dialect: org.hibernate.dialect.MariaDBDialect
+#         format_sql: true 
+  
+#   # redis
+#   # docker run -d --name redis-container -p 6379:6379 redis:7.2
+#   # docker exec -it redis-container redis-cli 
+#   # ping
+#   # docker run -d --name redis-insight -p 8001:5540 redis/redisinsight:latest
+#   # http://localhost:8001
+#   # Host: redis 또는 host.docker.internal , port: 6379
+
+#   data:
+#     redis:
+#       host: localhost
+#       port: 6379
+#       password: 
+#       timeout: 6000ms
+
+# #   ai:
+# #     openai:
+# #       model: ${OPEN_AI_MODEL:gpt-4o-mini}
+# #       api:
+# #         key: ${OPEN_AI_KEY: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}
+# #         url: ${OPEN_AI_URL:https://api.openai.com/v1/chat/completions}
+
+# # mybatis settings
+# # mybatis:
+# #     mapper-locations: /mappers/**/*Mapper.xml
+# #     config-location:  classpath:/mappers/config/mybatis-config.xml 
+
+
+# jwt:
+#   secret: daniel-secret-key-for-jwt-123456789
+
+# #open api key
+# # openApi:
+# #   serviceKey: 14876e8823f6377c10160f92ffbbc045c054da605b487616d0bee0f9a5bea72b
+# #   callBackUrl: http://apis.data.go.kr/1360000/BeachInfoservice/getVilageFcstBeach
+# #   dataType: JSON
+
+
+
+# 클라우드 환경
+
+server:
+  port: 8888
+  
+spring:
+
+  # mariadb settings
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: ${SPRING_DATASOURSE_URL:jdbc:mariadb://lgcns-daniel.c56oiy82c5g6.us-east-2.rds.amazonaws.com:3306/inspire?useSSL=true&verifyServerCertificate=false}  
+    username: ${SPRING_DATASOURSE_USERNAME:root}
+    password: ${SPRING_DATASOURSE_PASWWORD:12345678}
+  
+  jpa:
+    hibernate: 
+      # create, create-drop, update, none
+      ddl-auto: ${SPRING_JPA_HIBERNARE_DDL_AUTO:create}
+      # 콘솔출력
+    show-sql: ${SPRING_JPA_SHOW_SQL:true}
+    properties:
+      hibernate:
+        # h2
+        # dialect: org.hibernate.dialect.H2Dialect
+        # mariadb
+        dialect: org.hibernate.dialect.MariaDBDialect
+        format_sql: true 
+  
+  # redis
+  # docker run -d --name redis-container -p 6379:6379 redis:7.2
+  # docker exec -it redis-container redis-cli 
+  # ping
+  # docker run -d --name redis-insight -p 8001:5540 redis/redisinsight:latest
+  # http://localhost:8001
+  # Host: redis 또는 host.docker.internal , port: 6379
+
+  data:
+    redis:
+      host: ${SPRING_REDIS_HOST:redis}
+      port: ${SPRING_REDIS_PORT:6379}
+      password: 
+      timeout: 6000ms
+
+#   ai:
+#     openai:
+#       model: ${OPEN_AI_MODEL:gpt-4o-mini}
+#       api:
+#         key: ${OPEN_AI_KEY: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}
+#         url: ${OPEN_AI_URL:https://api.openai.com/v1/chat/completions}
+
+# mybatis settings
+# mybatis:
+#     mapper-locations: /mappers/**/*Mapper.xml
+#     config-location:  classpath:/mappers/config/mybatis-config.xml 
+
+
+jwt:
+  secret: daniel-secret-key-for-jwt-123456789
+
+#open api key
+# openApi:
+#   serviceKey: 14876e8823f6377c10160f92ffbbc045c054da605b487616d0bee0f9a5bea72b
+#   callBackUrl: http://apis.data.go.kr/1360000/BeachInfoservice/getVilageFcstBeach
+#   dataType: JSON
