@@ -25,4 +25,20 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
           aws-region: us-east-2
 
+      - name: aws_eks_cluster update
+        uses: aws eks update-kubeconfig --region us-east-2 --name lgcns-daniel-cluster
+
+
+      - name: aws ecr login
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: build and push docker img to ecr
+        env:
+          REGISTRY: 933090817123.dkr.ecr.us-east-2.amazonaws.com    # .com까지만
+          REPOSITORY: order-daniel-backend      # 그 뒤는 여기에
+          IMAGE_TAG: latest
+        run: |
+          docker build -t $RESISTORY/$REPOSITORY:$IMAGE_TAG -f Dockerfile .
+          docker push $RESISTORY/$REPOSITORY:$IMAGE_TAG
+
   
