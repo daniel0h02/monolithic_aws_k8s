@@ -46,6 +46,7 @@ jobs:
 
       - name: kubectl apply
         run: |
-          kubectl apply -f k8s/order_redis.yml -n lgcns
-          kubectl apply -f k8s/order_deployment.yml -n lgcns
+          kubectl apply -f k8s/order_redis.yml 
+          kubectl apply -f k8s/order_deployment.yml 
+          kubectl rollout restart deployment order-deployment
 
