@@ -1,13 +1,21 @@
-# .jar로 패키징을 위해 JDK image가 필요
-FROM eclipse-temurin:17-jdk-alpine
 
-#jar파일 위치를 지정해줌(굳이 안해도 되는데 혹시 모르니~)
-ARG JAR_FILE=build/libs/*.jar
+# build stage (JDK + gradle) -> jar
+FROM eclipse-temurin:17-jdk-alpine AS builder 
+WORKDIR /app
 
-#copy
-COPY ${JAR_FILE} ./backend.jar
+COPY gradlew . 
+COPY gradle gradle
+COPY build.gradle settings.gradle ./
 
-# run
-ENTRYPOINT ["java", "-jar", "./backend.jar"]
+RUN  chmod +x gradlew
+RUN  ./gradlew dependencies 
 
+COPY src src
+RUN  ./gradlew bootJar 
 
+# runtime stage (jre) -> jar
+FROM eclipse-temurin:17-jre-alpine
+WORKDIR /app
+
+COPY --from=builder /app/build/libs/*.jar app.jar
+ENTRYPOINT ["java", "-jar", "app.jar"]

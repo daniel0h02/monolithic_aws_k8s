@@ -70,23 +70,25 @@
 # 클라우드 환경
 
 server:
+  forward-headers-strategy: framework
   port: 8888
   
 spring:
 
   # mariadb settings
   datasource:
+  # ${} 외부변수 값은 k8s - secret 생성하여 pod 실행시 주입할 예정
     driver-class-name: org.mariadb.jdbc.Driver
-    url: ${SPRING_DATASOURSE_URL:jdbc:mariadb://lgcns-daniel.c56oiy82c5g6.us-east-2.rds.amazonaws.com:3306/inspire?useSSL=true&verifyServerCertificate=false}  
-    username: ${SPRING_DATASOURSE_USERNAME:root}
-    password: ${SPRING_DATASOURSE_PASWWORD:12345678}
+    url: jdbc:mariadb://${DB_HOST}:3306/inspire?useSSL=true&requireSSL=true  
+    username: ${DB_ADMIN}
+    password: ${DB_PASSWORD}
   
   jpa:
     hibernate: 
       # create, create-drop, update, none
-      ddl-auto: ${SPRING_JPA_HIBERNARE_DDL_AUTO:create}
+      ddl-auto: create
       # 콘솔출력
-    show-sql: ${SPRING_JPA_SHOW_SQL:true}
+    show-sql: true
     properties:
       hibernate:
         # h2
@@ -105,8 +107,9 @@ spring:
 
   data:
     redis:
-      host: ${SPRING_REDIS_HOST:redis}
-      port: ${SPRING_REDIS_PORT:6379}
+      # host : order_redis.yml의 서비스의 이름으로 변경
+      host: redis-service
+      port: 6379
       password: 
       timeout: 6000ms
 
