@@ -35,10 +35,14 @@ jobs:
       - name: build and push docker img to ecr
         env:
           REGISTRY: 933090817123.dkr.ecr.us-east-2.amazonaws.com    # .com까지만
-          REPOSITORY: order-daniel-backend      # 그 뒤는 여기에
+          REPOSITORY: order-daniel-backend     # 그 뒤는 여기에
           IMAGE_TAG: latest
         run: |
-          docker build -t $RESISTORY/$REPOSITORY:$IMAGE_TAG -f Dockerfile .
-          docker push $RESISTORY/$REPOSITORY:$IMAGE_TAG
+          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG -f Dockerfile .
+          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
 
-  
+      - name: kubectl apply
+        run: |
+          kubectl apply -f k8s/order_redis.yml -n lgcns
+          kubectl apply -f k8s/order_deployment.yml -n lgcns
+
