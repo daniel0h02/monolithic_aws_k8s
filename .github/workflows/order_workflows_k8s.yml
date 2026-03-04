@@ -26,7 +26,7 @@ jobs:
           aws-region: us-east-2
 
       - name: aws_eks_cluster update
-        uses: aws eks update-kubeconfig --region us-east-2 --name lgcns-daniel-cluster
+        run: aws eks update-kubeconfig --region us-east-2 --name lgcns-daniel-cluster
 
 
       - name: aws ecr login
