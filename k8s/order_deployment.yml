@@ -29,6 +29,18 @@ spec:
         ports:
           - containerPort: 8888
 
+        # autoscaler(pod) 작업을 위해서 추가함
+        resources:
+          # 컨테이너가 사용할수 있는 리소스의 최대치
+          limits:
+            cpu: "1"
+            memory: "500Mi"
+          # 컨테이너가 시작될떄 보장받아야 하는 최소 자원
+          requests:
+            cpu: "0.5"
+            memory: "250Mi"
+
+
         # k8s - secret에 설정한 정보를 외부변수로 전환하는  작업
         # yaml에 있는 이름
         env: 
@@ -53,7 +65,8 @@ spec:
 
 
 
----  #구분 지어야 함 아래처럼
+---  #구분 지어야 함
+
 #core service setting
 apiVersion: v1
 

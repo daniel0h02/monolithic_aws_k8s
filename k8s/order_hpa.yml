@@ -1,0 +1,46 @@
+
+# pod 상태 확인을 위한 metric-server 를 cluster 내에 설치하는 작업
+#kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.6.3/components.yaml
+#kubectl delete -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.6.3/components.yaml
+
+
+apiVersion: autoscaling/v1
+
+kind: HorizontalPodAutoscaler
+
+metadata:
+  name: orders-backend-hap
+  namespace: lgcns
+    
+
+spec: 
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: order-deployment
+
+  # pod autoscaling
+  # minReplicas: 2
+  # maxReplicas: 4
+  # targetCPUUtilizationPercentage: 50
+
+  # ec2 autoscaling
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 30
+
+# test
+# hpa 통해서 pod의 현황 파악한다면
+# kubectl get hpa orders-backend-hap -n lgcns -w(watch 쳐다본다는 뜻)
+# cpu에 unknown이 뜨면 다시 삭제 설치
+# kubectl delete -f ./order_hpa.yml
+# kubectl delete -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.6.3/components.yaml
+# 그리고 다시 어플라이
+
+# 부하테스트를 위해서 pod 접근
+# kubectl get pod -n lgcns
+# kubectl exec -it XXXXXXX -n lgcns -- sh
+# apk add --no-cache curl
+# while true; do curl -s http://order-service/product/list; done
+
+
