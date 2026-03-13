@@ -113,24 +113,7 @@ spring:
       password: 
       timeout: 6000ms
 
-#   ai:
-#     openai:
-#       model: ${OPEN_AI_MODEL:gpt-4o-mini}
-#       api:
-#         key: ${OPEN_AI_KEY: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}
-#         url: ${OPEN_AI_URL:https://api.openai.com/v1/chat/completions}
-
-# mybatis settings
-# mybatis:
-#     mapper-locations: /mappers/**/*Mapper.xml
-#     config-location:  classpath:/mappers/config/mybatis-config.xml 
-
 
 jwt:
   secret: daniel-secret-key-for-jwt-123456789
 
-#open api key
-# openApi:
-#   serviceKey: 14876e8823f6377c10160f92ffbbc045c054da605b487616d0bee0f9a5bea72b
-#   callBackUrl: http://apis.data.go.kr/1360000/BeachInfoservice/getVilageFcstBeach
-#   dataType: JSON

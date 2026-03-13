@@ -1,55 +1,60 @@
-name: deploy order
+# name: deploy order
 
-on:
-  push:
-    branches:
-      - main
+# on:         # 트리거 설정
+#   push:     # push 트리서
+#     branches: # branch가 main일 때 실행
+#       - main
 
-jobs:
-  # job name
-  build-and-deploy:
-    # runner
-    runs-on: ubuntu-latest
+# jobs:       # 파이프라인이 실제로 실행하는 작업인 워크플로우를 적성
+#   # job name
+#   build-and-deploy:     #이런 이름은 자유롭게 줄 수 있음
+#     # runner
+#     runs-on: ubuntu-latest      # OS
 
-    steps:
-      - name: checkout github
-        uses: actions/checkout@v2
-      
-      - name: install kubectl
-        uses: azure/setup-kubectl@v3
-        with:
-          version: "v1.34.1"
+#     steps:      # 실제로 수행해야 할 명령어
+#         # 소스 코드 chekout
+#       - name: checkout github       # 이름 자유럽게 줄 수 있음
+#         uses: actions/checkout@v2     # 명령어
+#         # 리눅스 환경에서 kubectl ubutu 설치
+#       - name: install kubectl
+#         uses: azure/setup-kubectl@v3  # 명령어를 직접적으로(hard coding) 쓸 수 있는데 actions에 만들어져 있는 명령어가 있어 그걸 써도 됨, 약속되어 있는 명령어
+#         with:
+#           # 버전 이슈가 있어서 명세
+#           version: "v1.34.1"
 
-      - name: aws configure
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_KEY }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
-          aws-region: us-east-2
+#       # aws 인증
+#       - name: aws configure
+#         uses: aws-actions/configure-aws-credentials@v1
+#         with:       # 추가적인 작업은 with를 통해 쓰면 됨(enviroment)
+#           # IAM access키 만들 떄 받았던 csv 파일 다운 받아놔야 함 아니면 다시 받아야 함
+#           aws-access-key-id: ${{ secrets.AWS_KEY }}             # 중괄호 2개 씀(문법), 대소문자 구별함
+#           aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}  # 똑같이 csv
+#           aws-region: us-east-2                                 # 본인 region
 
-      - name: aws_eks_cluster update
-        run: aws eks update-kubeconfig --region us-east-2 --name lgcns-daniel-cluster
+#       # cluster 접근
+#       - name: aws_eks_cluster update
+#         run: aws eks update-kubeconfig --region us-east-2 --name lgcns-daniel-cluster  #콘솔에다 내리는 명령어는 run
 
-
-      - name: aws ecr login
-        uses: aws-actions/amazon-ecr-login@v1
+#       # ECR 로그인
+#       - name: aws ecr login       # 이미지를 push하기 위해서 ecr 로그인
+#         uses: aws-actions/amazon-ecr-login@v1     # 뒤에 @이는 버전
         
 
-      - name: build and push docker img to ecr
-        env:
-          REGISTRY: 933090817123.dkr.ecr.us-east-2.amazonaws.com    # .com까지만
-          REPOSITORY: order-daniel-backend     # 그 뒤는 여기에
-          IMAGE_TAG: latest
-        run: |
-          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG -f Dockerfile .
-          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+#       - name: build and push docker img to ecr    
+#         env:      #외부환경 명령어 주입, 환경 변수
+#           REGISTRY: 933090817123.dkr.ecr.us-east-2.amazonaws.com    # ecr엔드포인트, .com까지만
+#           REPOSITORY: order-daniel-backend     # 그 뒤는 여기에
+#           IMAGE_TAG: latest     # 버전
+#         run: |          # 역슬레시, 그룹화 시킬 때 씀
+#           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG -f Dockerfile .   # 위에 변수 참조   
+#           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
 
-      - name: kubectl apply
-        run: |
-          kubectl apply -f k8s/order_redis.yml
-          kubectl apply -f k8s/order_deployment.yml
-          kubectl apply -f k8s/order_ingress.yml -n lgcns
-          kubectl rollout restart deployment order-deployment -n lgcns
+#       - name: kubectl apply
+#         run: |
+#           kubectl apply -f k8s/order_redis.yml
+#           kubectl apply -f k8s/order_deployment.yml
+#           kubectl apply -f k8s/order_ingress.yml -n lgcns
+#           kubectl rollout restart deployment order-deployment -n lgcns
 
  
 
